@@ -7,7 +7,7 @@ export const services = [
     tag: "Comprehensive",
     tagVariant: "indigo",
     icon: "specialized",
-    img: "https://images.unsplash.com/photo-1483794344563-d27a8d18014e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2670"
+    img: "https://images.unsplash.com/photo-1528756514091-dee5ecaa3278?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1287"
   },
   {
     id: "medication",
@@ -17,7 +17,7 @@ export const services = [
     tag: "Daily",
     tagVariant: "sky",
     icon: "medication",
-    img: "https://images.unsplash.com/photo-1557434773-7fabb2f01f7d?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1544"
+    img: "https://images.unsplash.com/photo-1528756514091-dee5ecaa3278?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1287"
   },
   {
     id: "meals",
@@ -27,7 +27,7 @@ export const services = [
     tag: "Custom",
     tagVariant: "green",
     icon: "meals",
-    img: "https://images.unsplash.com/photo-1632431455870-65dd9cf75e0e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=3732"
+    img: "https://images.unsplash.com/photo-1528756514091-dee5ecaa3278?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1287"
   },
   {
     id: "activities",
@@ -37,7 +37,7 @@ export const services = [
     tag: "Enrichment",
     tagVariant: "slate",
     icon: "activities",
-    img: "https://images.unsplash.com/photo-1562133558-4a3906179c67?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1335"
+    img: "https://images.unsplash.com/photo-1528756514091-dee5ecaa3278?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1287"
   },
   {
     id: "personal-care",
@@ -57,7 +57,7 @@ export const services = [
     tag: "Included",
     tagVariant: "sky",
     icon: "amenities",
-    img: "https://images.unsplash.com/photo-1673297352939-e308a901b5f0?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1287"
+    img: "https://images.unsplash.com/photo-1528756514091-dee5ecaa3278?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1287"
   }
 ];
 

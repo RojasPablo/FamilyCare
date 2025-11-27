@@ -5,19 +5,62 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import Hero from "@/components/ui/Hero";
+import ParallaxHero from "@/components/ui/ParallaxHero";
+import Gradient from "@/components/ui/Gradient";
 import { services } from "@/data/services";
-import { 
-  MdOutlineHealthAndSafety, 
-  MdDryCleaning 
-} from "react-icons/md";
-import { 
-  GiMedicines, 
-  GiMeal 
-} from "react-icons/gi";
-import { 
-  FaChess, 
-  FaUmbrellaBeach
-} from "react-icons/fa";
+import { MdOutlineHealthAndSafety, MdDryCleaning } from "react-icons/md";
+import { GiMedicines, GiMeal } from "react-icons/gi";
+import { FaChess, FaUmbrellaBeach } from "react-icons/fa";
+
+
+// ─────────────────────────────────────────────
+// Word-by-word animated headline (scroll-triggered)
+// ─────────────────────────────────────────────
+function AnimatedHeadlineOnScroll({ text, className = "", as = "h2" }) {
+  const words = text.split(" ");
+  const Tag = as;
+  
+  return (
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      variants={{
+        hidden: {},
+        visible: {
+          transition: {
+            staggerChildren: 0.08,
+            delayChildren: 0.1,
+          },
+        },
+      }}
+    >
+      <Tag className={className}>
+        {words.map((word, i) => (
+          <motion.span
+            key={i}
+            className="inline-block mr-[0.25em]"
+            variants={{
+              hidden: { opacity: 0, y: 40, rotateX: -40 },
+              visible: { 
+                opacity: 1, 
+                y: 0, 
+                rotateX: 0,
+                transition: {
+                  duration: 0.6,
+                  ease: [0.215, 0.61, 0.355, 1],
+                },
+              },
+            }}
+          >
+            {word}
+          </motion.span>
+        ))}
+      </Tag>
+    </motion.div>
+  );
+}
+
 
 // Short descriptions for cards
 const shortDescriptions = {
@@ -26,7 +69,7 @@ const shortDescriptions = {
   meals: "Customized meals tailored to dietary needs",
   activities: "Engaging programs for mind and body",
   "personal-care": "Dignified assistance with daily living",
-  amenities: "Comfortable, accessible facilities"
+  amenities: "Comfortable, accessible facilities",
 };
 
 // Icon mapping
@@ -36,7 +79,17 @@ const iconMap = {
   meals: GiMeal,
   activities: FaChess,
   personal: MdDryCleaning,
-  amenities: FaUmbrellaBeach
+  amenities: FaUmbrellaBeach,
+};
+
+// Image mapping for service cards
+const serviceImages = {
+  specialized: "/images/SpecialServ.jpeg",
+  medication: "/images/MedicalAs.jpeg",
+  meals: "/images/Meals.jpeg",
+  activities: "/images/Activities.jpeg",
+  "personal-care": "/images/Hygiene.jpeg",
+  amenities: "/images/Amenities.jpeg",
 };
 
 // Extended details for modal
@@ -45,25 +98,25 @@ const serviceDetails = {
     "Alzheimer's & Dementia Care: Structured routines, cognitive support, and emotional care",
     "Mental Health & Wellness: Care for individuals managing mental health challenges",
     "Hospice & End-of-Life Care: Compassionate care ensuring dignity and comfort",
-    "Development Disabilities: Tailored programs fostering independence and engagement"
+    "Development Disabilities: Tailored programs fostering independence and engagement",
   ],
   medication: [
     "Medication Administration: Professional administration of prescribed medications",
     "Medication Management: Careful tracking and coordination with healthcare providers",
     "Medication Reminders: Timely reminders for self-administered medications",
-    "Care for Pressure Sores: Specialized wound care and monitoring"
+    "Care for Pressure Sores: Specialized wound care and monitoring",
   ],
   meals: [
     "Customized Meals: Tailored to individual dietary requirements",
     "Mechanical Soft Chew: Specially prepared for those with swallowing difficulties",
     "Meal Preparation: Fresh, home-cooked meals prepared daily",
-    "Nutritional Planning: Coordinated with healthcare providers"
+    "Nutritional Planning: Coordinated with healthcare providers",
   ],
   activities: [
     "Cognitive Stimulation: Games and activities to keep minds active",
     "Adult Day Care Services: Structured daily activities and socialization",
     "Wellness Center: Programs focused on overall wellbeing",
-    "Alternative Therapy: Including massage and other therapeutic activities"
+    "Alternative Therapy: Including massage and other therapeutic activities",
   ],
   personal: [
     "Bathing/Showering: Assisted bathing with dignity and respect",
@@ -72,7 +125,7 @@ const serviceDetails = {
     "Incontinence Care: Professional and compassionate support",
     "Catheter Care: Specialized medical assistance",
     "Transfer Assistance: Basic and Hoyer lift support",
-    "Feeding Support: Help with meals as needed"
+    "Feeding Support: Help with meals as needed",
   ],
   amenities: [
     "Wheelchair/walker accessible home and bathrooms",
@@ -81,24 +134,25 @@ const serviceDetails = {
     "Manicured lawn and outdoor spaces",
     "Large outdoor deck for resident use",
     "Care for Visual/Hearing Impaired residents",
-    "Memory Care in unlocked unit"
-  ]
+    "Memory Care in unlocked unit",
+  ],
 };
 
 // Updated amenities description
-const amenitiesFullDesc = "We offer a variety of beneficial amenities to maximize residents' overall experience and comfort at our facility. Our home is designed to feel welcoming and accessible for all residents.";
+const amenitiesFullDesc =
+  "We offer a variety of beneficial amenities to maximize residents' overall experience and comfort at our facility. Our home is designed to feel welcoming and accessible for all residents.";
 
 // Accordion Item Component
 function AccordionItem({ title, children, defaultOpen = false }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div 
+    <div
       className="rounded-2xl overflow-hidden transition-all duration-300"
       style={{
-        background: 'rgba(255, 255, 255, 0.15)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(255, 255, 255, 0.3)',
+        background: "rgba(255, 255, 255, 0.15)",
+        backdropFilter: "blur(10px)",
+        border: "1px solid rgba(255, 255, 255, 0.3)",
       }}
     >
       <button
@@ -116,19 +170,17 @@ function AccordionItem({ title, children, defaultOpen = false }) {
           ▼
         </motion.span>
       </button>
-      
+
       <motion.div
         initial={false}
         animate={{
           height: isOpen ? "auto" : 0,
-          opacity: isOpen ? 1 : 0
+          opacity: isOpen ? 1 : 0,
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
         style={{ overflow: "hidden" }}
       >
-        <div className="px-6 pb-5">
-          {children}
-        </div>
+        <div className="px-6 pb-5">{children}</div>
       </motion.div>
     </div>
   );
@@ -138,36 +190,32 @@ export default function ServicesPage() {
   const [selectedService, setSelectedService] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
 
-  // Refs for scroll-triggered animations
   const servicesGridRef = useRef(null);
   const additionalServicesRef = useRef(null);
 
-  // Detect when sections are in view
-  const servicesInView = useInView(servicesGridRef, { 
+  const servicesInView = useInView(servicesGridRef, {
     once: true,
-    amount: 0.2
+    amount: 0.2,
   });
 
-  const additionalInView = useInView(additionalServicesRef, { 
+  const additionalInView = useInView(additionalServicesRef, {
     once: true,
-    amount: 0.2
+    amount: 0.2,
   });
 
-  // Prevent body scroll when modal is open
+  // lock scroll when modal open
   useEffect(() => {
     if (selectedService) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
-    
-    // Cleanup on unmount
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [selectedService]);
 
-  // Handle hash navigation (e.g., from "View Services" button)
+  // hash scroll
   useEffect(() => {
     const hash = window.location.hash;
     if (hash) {
@@ -176,10 +224,11 @@ export default function ServicesPage() {
         if (element) {
           const navbarHeight = 72;
           const elementPosition = element.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+          const offsetPosition =
+            elementPosition + window.pageYOffset - navbarHeight;
           window.scrollTo({
             top: offsetPosition,
-            behavior: "smooth"
+            behavior: "smooth",
           });
         }
       }, 100);
@@ -188,11 +237,11 @@ export default function ServicesPage() {
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: "easeOut" }
-    }
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
   };
 
   const staggerContainer = {
@@ -200,32 +249,67 @@ export default function ServicesPage() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15
-      }
-    }
+        delayChildren: 0.7,
+        staggerChildren: 0.25,
+      },
+    },
   };
 
   return (
     <>
       <main>
-        {/* HERO SECTION - Let Hero component control font sizing */}
-        <Hero
-          eyebrow="Services"
-          title="Care services designed for safety, comfort, and dignity"
-          subtitle={
-            <>
-              <p>
-                At GEM CARE AFH, we provide personalized care services designed to support seniors at every stage of aging. Our dedicated team works closely with families to create customized care plans that meet the unique needs of each resident, ensuring they receive the right level of assistance while maintaining their independence.
-              </p>
-              <p className="mt-4">
-                With a focus on comfort, dignity, and well-being, our compassionate caregivers offer the support needed to help residents thrive in a warm and welcoming home environment.
-              </p>
-            </>
-          }
+        {/* Parallax Hero with Services.jpeg */}
+        <ParallaxHero
+          imageSrc="/images/Services.jpeg"
+          alt="GEM CARE professional healthcare services"
+          text="Services"
         />
 
-        {/* SERVICES GRID SECTION - FROSTED GLASS STYLE */}
-        <section id="services" className="relative w-full py-16" ref={servicesGridRef}>
+        {/* Original Hero Section with Waves.svg */}
+        <section className="relative">
+          {/* Waves SVG Background */}
+          <div 
+            className="absolute inset-0 w-full h-full opacity-20 pointer-events-none"
+            style={{
+              backgroundImage: 'url(/images/Waves.svg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
+          />
+          
+          <Hero
+            eyebrow="Services"
+            title="Care services designed for safety, comfort, and dignity"
+            subtitle={
+              <>
+                <p>
+                  At GEM CARE AFH, we provide personalized care services designed
+                  to support seniors at every stage of aging. Our dedicated team
+                  works closely with families to create customized care plans that
+                  meet the unique needs of each resident, ensuring they receive
+                  the right level of assistance while maintaining their
+                  independence.
+                </p>
+                <p className="mt-4">
+                  With a focus on comfort, dignity, and well-being, our
+                  compassionate caregivers offer the support needed to help
+                  residents thrive in a warm and welcoming home environment.
+                </p>
+              </>
+            }
+          />
+        </section>
+
+        {/* SERVICES GRID SECTION with Gradient */}
+        <section
+          id="services"
+          className="relative w-full py-16"
+          ref={servicesGridRef}
+        >
+          {/* Gradient Background */}
+          <Gradient variant="blue" className="absolute inset-0 -z-10" />
+          
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <motion.div
               initial="hidden"
@@ -233,40 +317,42 @@ export default function ServicesPage() {
               variants={staggerContainer}
               className="relative rounded-3xl ring-1 ring-white/30 p-6 sm:p-8 md:p-12 lg:p-16"
               style={{
-                background: 'linear-gradient(to bottom, rgba(239, 239, 239, 0.7) 0%, rgba(184, 216, 232, 0.7) 100%)',
-                backdropFilter: 'blur(14px) saturate(140%)',
-                WebkitBackdropFilter: 'blur(14px) saturate(140%)',
-                boxShadow: '0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 10px 30px rgba(0, 0, 0, 0.25)',
+                background:
+                  "linear-gradient(to bottom, rgba(239, 239, 239, 0.7) 0%, rgba(184, 216, 232, 0.7) 100%)",
+                backdropFilter: "blur(14px) saturate(140%)",
+                WebkitBackdropFilter: "blur(14px) saturate(140%)",
+                boxShadow:
+                  "0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 10px 30px rgba(0, 0, 0, 0.25)",
               }}
             >
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0 rounded-3xl"
-                style={{ boxShadow: "0 0 0 1px rgba(255, 255, 255, 0.15) inset" }}
+                style={{
+                  boxShadow: "0 0 0 1px rgba(255, 255, 255, 0.15) inset",
+                }}
               />
 
               <div className="relative">
                 {/* Header */}
                 <div className="text-center mb-8 sm:mb-12">
-                  <motion.p 
+                  <motion.p
                     variants={fadeInUp}
-                    className="text-eyebrow mb-3" 
-                    style={{ color: '#6b7d6b' }}
+                    className="text-eyebrow mb-3"
+                    style={{ color: "#6b7d6b" }}
                   >
                     OUR SERVICES
                   </motion.p>
-                  
-                  <motion.h2 
-                    variants={fadeInUp}
-                    className="text-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6" 
-                    style={{ color: '#2d3d2d' }}
-                  >
-                    Specialized care for every need
-                  </motion.h2>
+
+                  <AnimatedHeadlineOnScroll
+                    text="Specialized care for every need"
+                    className="text-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6"
+                    as="h2"
+                  />
                 </div>
 
-                {/* Services Grid */}
-                <motion.div 
+                {/* Services Grid - OPTION 3 DESIGN */}
+                <motion.div
                   initial="hidden"
                   animate={servicesInView ? "visible" : "hidden"}
                   variants={staggerContainer}
@@ -275,7 +361,7 @@ export default function ServicesPage() {
                   {services.map((service, index) => {
                     const IconComponent = iconMap[service.icon];
                     const isHovered = hoveredCard === index;
-                    
+
                     return (
                       <motion.div
                         key={service.id}
@@ -283,63 +369,79 @@ export default function ServicesPage() {
                         onMouseEnter={() => setHoveredCard(index)}
                         onMouseLeave={() => setHoveredCard(null)}
                         onClick={() => setSelectedService(service)}
-                        className="group relative flex flex-col items-center rounded-2xl p-6 cursor-pointer transition-all duration-300"
+                        className="group relative flex flex-col rounded-2xl overflow-hidden cursor-pointer will-change-transform bg-white shadow-lg"
                         style={{
-                          background: 'rgba(255, 255, 255, 0.5)',
-                          backdropFilter: 'blur(10px)',
-                          border: '1px solid rgba(255, 255, 255, 0.3)',
-                          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                          border: "1px solid rgba(255, 255, 255, 0.3)",
                         }}
                         whileHover={{
                           y: -4,
-                          boxShadow: '0 8px 16px rgba(0, 0, 0, 0.15)',
-                          transition: { duration: 0.3 }
+                          boxShadow: "0 12px 24px rgba(0, 0, 0, 0.15)",
+                        }}
+                        transition={{
+                          type: "tween",
+                          duration: 0.2,
+                          ease: "easeOut",
                         }}
                       >
-                        {/* Icon with Rotate Animation */}
-                        <div
-                          className="mb-4 flex h-20 w-20 items-center justify-center rounded-full"
-                          style={{ backgroundColor: '#5DADE2' }}
-                        >
-                          <motion.div
-                            animate={isHovered ? {
-                              rotate: [-8, 8, -8, 8, 0],
-                              transition: {
-                                duration: 0.8,
-                                ease: "easeInOut"
-                              }
-                            } : {}}
+                        {/* Image Header */}
+                        <div className="relative h-48 overflow-hidden">
+                          <Image
+                            src={serviceImages[service.id]}
+                            alt={service.title}
+                            fill
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                          {/* Icon Overlay */}
+                          <div
+                            className="absolute top-4 left-4 w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
+                            style={{ backgroundColor: "#5DADE2" }}
                           >
-                            {IconComponent && <IconComponent size={36} color="#fff" />}
-                          </motion.div>
+                            <motion.div
+                              animate={
+                                isHovered
+                                  ? {
+                                      rotate: [-8, 8, -8, 8, 0],
+                                      transition: {
+                                        duration: 0.6,
+                                        ease: "easeInOut",
+                                      },
+                                    }
+                                  : { rotate: 0 }
+                              }
+                            >
+                              {IconComponent && (
+                                <IconComponent size={28} color="#fff" />
+                              )}
+                            </motion.div>
+                          </div>
                         </div>
 
-                        {/* Service Title */}
-                        <h3 
-                          className="text-heading text-lg sm:text-xl font-bold text-center mb-2"
-                          style={{ color: '#2d3d2d' }}
-                        >
-                          {service.title}
-                        </h3>
+                        {/* Content Below */}
+                        <div className="p-6 flex flex-col flex-grow">
+                          <h3
+                            className="text-heading text-lg sm:text-xl font-bold mb-2 text-center"
+                            style={{ color: "#2d3d2d" }}
+                          >
+                            {service.title}
+                          </h3>
 
-                        {/* Short Description */}
-                        <p 
-                          className="text-body-md text-center mb-4"
-                          style={{ color: '#6b7d6b' }}
-                        >
-                          {shortDescriptions[service.id]}
-                        </p>
+                          <p
+                            className="text-body-md mb-4 flex-grow text-center"
+                            style={{ color: "#6b7d6b" }}
+                          >
+                            {shortDescriptions[service.id]}
+                          </p>
 
-                        {/* Read More Button */}
-                        <button
-                          className="px-4 py-2 text-sm font-medium rounded-full transition-all"
-                          style={{
-                            backgroundColor: 'rgba(93, 173, 226, 0.2)',
-                            color: '#2d3d2d',
-                          }}
-                        >
-                          Learn more
-                        </button>
+                          <button
+                            className="w-full px-4 py-2 text-sm font-medium rounded-full transition-all"
+                            style={{
+                              backgroundColor: "rgba(93, 173, 226, 0.2)",
+                              color: "#2d3d2d",
+                            }}
+                          >
+                            Learn more
+                          </button>
+                        </div>
                       </motion.div>
                     );
                   })}
@@ -349,31 +451,37 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        {/* ADDITIONAL INFORMATION SECTION - ACCORDION STYLE */}
+        {/* ADDITIONAL INFORMATION SECTION with Gradient */}
         <section className="relative w-full py-16" ref={additionalServicesRef}>
+          {/* Gradient Background */}
+          <Gradient variant="blue" className="absolute inset-0 -z-10" />
+          
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={additionalInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              animate={
+                additionalInView
+                  ? { opacity: 1, y: 0 }
+                  : { opacity: 0, y: 20 }
+              }
               transition={{ duration: 0.6 }}
               className="relative rounded-3xl ring-1 ring-white/20 p-6 sm:p-8 md:p-12 lg:p-16"
               style={{
-                background: 'linear-gradient(135deg, #5DADE2 0%, #c8d7ba 100%)',
-                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+                background: "linear-gradient(135deg, #5DADE2 0%, #c8d7ba 100%)",
+                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
               }}
             >
               <div className="text-center mb-8">
-                <h2 className="text-heading text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
-                  Additional Information
-                </h2>
+                <AnimatedHeadlineOnScroll
+                  text="Additional Information"
+                  className="text-heading text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4"
+                  as="h2"
+                />
               </div>
 
               {/* Accordion */}
               <div className="space-y-4 mb-8">
-                <AccordionItem 
-                  title="Care Options"
-                  defaultOpen={true}
-                >
+                <AccordionItem title="Care Options" defaultOpen={true}>
                   <ul className="space-y-3">
                     <li className="flex items-start gap-3 text-white/90 text-body-md">
                       <span className="text-white font-bold">✓</span>
@@ -460,24 +568,45 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        {/* COMMITMENT SECTION - Let Hero component control font sizing */}
-        <Hero
-          eyebrow="Our Commitment"
-          title="Personalized care, delivered with presence and heart"
-          subtitle={
-            <>
-              <p>
-                At GEM CARE AFH, our commitment to personalized care goes beyond just providing a service—it is about creating a true home for our residents. Provider Seble Seifu is dedicated and available to support our staff, residents, and their families. This ensures that any concerns are addressed promptly and personally, giving families peace of mind.
-              </p>
-              <p className="mt-4">
-                We provide round-the-clock care delivered by highly trained, professional staff who are passionate about senior well-being. Our team is committed to fostering a warm, supportive environment where every resident feels valued and cared for.
-              </p>
-            </>
-          }
-        />
+        {/* COMMITMENT SECTION with Waves.svg */}
+        <section className="relative">
+          {/* Waves SVG Background */}
+          <div 
+            className="absolute inset-0 w-full h-full opacity-20 pointer-events-none"
+            style={{
+              backgroundImage: 'url(/images/Waves.svg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
+          />
+          
+          <Hero
+            eyebrow="Our Commitment"
+            title="Personalized care, delivered with presence and heart"
+            subtitle={
+              <>
+                <p>
+                  At GEM CARE AFH, our commitment to personalized care goes beyond
+                  just providing a service—it is about creating a true home for
+                  our residents. Provider Seble Seifu is dedicated and available
+                  to support our staff, residents, and their families. This
+                  ensures that any concerns are addressed promptly and personally,
+                  giving families peace of mind.
+                </p>
+                <p className="mt-4">
+                  We provide round-the-clock care delivered by highly trained,
+                  professional staff who are passionate about senior well-being.
+                  Our team is committed to fostering a warm, supportive
+                  environment where every resident feels valued and cared for.
+                </p>
+              </>
+            }
+          />
+        </section>
       </main>
 
-      {/* Service Detail Modal with Plant Background and Frosted Glass */}
+      {/* Service Detail Modal */}
       <AnimatePresence>
         {selectedService && (
           <>
@@ -497,7 +626,7 @@ export default function ServicesPage() {
               className="fixed inset-0 z-50 flex items-center justify-center p-4"
               onClick={() => setSelectedService(null)}
             >
-              <div 
+              <div
                 className="relative w-full max-w-5xl max-h-[90vh] rounded-3xl overflow-hidden"
                 onClick={(e) => e.stopPropagation()}
               >
@@ -512,23 +641,24 @@ export default function ServicesPage() {
                   <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/40" />
                 </div>
 
-                {/* Content Layer with Frosted Glass */}
+                {/* Content Layer */}
                 <div className="relative z-10 overflow-y-auto max-h-[90vh] p-6 sm:p-8 md:p-12">
-                  <div 
+                  <div
                     className="rounded-2xl p-6 sm:p-8 md:p-10"
                     style={{
-                      background: 'rgba(239, 239, 239, 0.65)',
-                      backdropFilter: 'blur(20px) saturate(180%)',
-                      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-                      border: '1px solid rgba(255, 255, 255, 0.3)',
-                      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.08)',
+                      background: "rgba(239, 239, 239, 0.65)",
+                      backdropFilter: "blur(20px) saturate(180%)",
+                      WebkitBackdropFilter: "blur(20px) saturate(180%)",
+                      border: "1px solid rgba(255, 255, 255, 0.3)",
+                      boxShadow:
+                        "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.08)",
                     }}
                   >
-                    {/* Icon and Title with Rotate Animation */}
+                    {/* Icon and Title */}
                     <div className="flex items-start gap-4 mb-6">
                       <span
                         className="inline-flex h-16 w-16 items-center justify-center rounded-full flex-shrink-0"
-                        style={{ backgroundColor: '#5DADE2' }}
+                        style={{ backgroundColor: "#5DADE2" }}
                       >
                         <motion.div
                           animate={{
@@ -537,56 +667,91 @@ export default function ServicesPage() {
                               duration: 0.8,
                               ease: "easeInOut",
                               repeat: Infinity,
-                              repeatDelay: 2
-                            }
+                              repeatDelay: 2,
+                            },
                           }}
                         >
-                          {iconMap[selectedService.icon] && 
-                            React.createElement(iconMap[selectedService.icon], { size: 28, color: "#fff" })
-                          }
+                          {iconMap[selectedService.icon] &&
+                            React.createElement(iconMap[selectedService.icon], {
+                              size: 28,
+                              color: "#fff",
+                            })}
                         </motion.div>
                       </span>
                       <div className="flex-1">
-                        <h2 className="text-heading text-2xl sm:text-3xl md:text-4xl font-bold mb-2" style={{ color: '#2d3d2d' }}>
+                        <h2
+                          className="text-heading text-2xl sm:text-3xl md:text-4xl font-bold mb-2"
+                          style={{ color: "#2d3d2d" }}
+                        >
                           {selectedService.title}
                         </h2>
-                        <p className="text-body-md" style={{ color: '#6b7d6b' }}>
+                        <p
+                          className="text-body-md"
+                          style={{ color: "#6b7d6b" }}
+                        >
                           {selectedService.tag}
                         </p>
                       </div>
                     </div>
 
                     {/* Full Description */}
-                    <p className="text-body-lg mb-6 leading-relaxed" style={{ color: '#2d3d2d' }}>
-                      {selectedService.id === 'amenities' ? amenitiesFullDesc : selectedService.desc}
+                    <p
+                      className="text-body-lg mb-6 leading-relaxed"
+                      style={{ color: "#2d3d2d" }}
+                    >
+                      {selectedService.id === "amenities"
+                        ? amenitiesFullDesc
+                        : selectedService.desc}
                     </p>
 
-                    {/* What's Included List - Integrated into main body */}
+                    {/* What's Included */}
                     {serviceDetails[selectedService.id] && (
                       <>
-                        <h3 className="text-heading text-lg sm:text-xl font-bold mb-4" style={{ color: '#2d3d2d' }}>
+                        <h3
+                          className="text-heading text-lg sm:text-xl font-bold mb-4"
+                          style={{ color: "#2d3d2d" }}
+                        >
                           What's Included:
                         </h3>
                         <ul className="space-y-3 mb-6">
-                          {serviceDetails[selectedService.id].map((detail, idx) => (
-                            <li key={idx} className="flex items-start gap-3">
-                              <span 
-                                className="inline-flex h-6 w-6 items-center justify-center flex-shrink-0 mt-0.5 relative"
-                              >
-                                {/* Azure circle background */}
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 absolute" style={{ color: '#5DADE2' }}>
-                                  <circle cx="12" cy="12" r="9.75" />
-                                </svg>
-                                {/* White checkmark on top */}
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4 relative z-10" style={{ color: '#fff' }}>
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                                </svg>
-                              </span>
-                              <span className="text-body-md" style={{ color: '#2d3d2d' }}>
-                                {detail}
-                              </span>
-                            </li>
-                          ))}
+                          {serviceDetails[selectedService.id].map(
+                            (detail, idx) => (
+                              <li key={idx} className="flex items-start gap-3">
+                                <span className="inline-flex h-6 w-6 items-center justify-center flex-shrink-0 mt-0.5 relative">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    className="w-6 h-6 absolute"
+                                    style={{ color: "#5DADE2" }}
+                                  >
+                                    <circle cx="12" cy="12" r="9.75" />
+                                  </svg>
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2.5"
+                                    className="w-4 h-4 relative z-10"
+                                    style={{ color: "#fff" }}
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="M4.5 12.75l6 6 9-13.5"
+                                    />
+                                  </svg>
+                                </span>
+                                <span
+                                  className="text-body-md"
+                                  style={{ color: "#2d3d2d" }}
+                                >
+                                  {detail}
+                                </span>
+                              </li>
+                            )
+                          )}
                         </ul>
                       </>
                     )}
@@ -596,7 +761,10 @@ export default function ServicesPage() {
                       <Link href="/contact" className="btn btn-primary">
                         Contact us about this service
                       </Link>
-                      <button onClick={() => setSelectedService(null)} className="btn btn-white">
+                      <button
+                        onClick={() => setSelectedService(null)}
+                        className="btn btn-white"
+                      >
                         Close
                       </button>
                     </div>

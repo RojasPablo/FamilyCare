@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #efefef;
+  --background: #dfd8d8;
   --foreground: #171717;
   --font-heading: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;

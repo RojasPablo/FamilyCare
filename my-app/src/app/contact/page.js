@@ -4,22 +4,59 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 
-// Header scale animation
-const headerVariants = {
-  hidden: { opacity: 0, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] },
-  },
-};
+
+// ─────────────────────────────────────────────
+// Word-by-word animated headline (clean, no blur)
+// ─────────────────────────────────────────────
+function AnimatedHeadline({ text, className = "", delay = 0.1 }) {
+  const words = text.split(" ");
+  
+  return (
+    <motion.h1 
+      className={className}
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: {},
+        visible: {
+          transition: {
+            staggerChildren: 0.08,
+            delayChildren: delay,
+          },
+        },
+      }}
+    >
+      {words.map((word, i) => (
+        <motion.span
+          key={i}
+          className="inline-block mr-[0.25em]"
+          variants={{
+            hidden: { opacity: 0, y: 40, rotateX: -40 },
+            visible: { 
+              opacity: 1, 
+              y: 0, 
+              rotateX: 0,
+              transition: {
+                duration: 0.6,
+                ease: [0.215, 0.61, 0.355, 1],
+              },
+            },
+          }}
+        >
+          {word}
+        </motion.span>
+      ))}
+    </motion.h1>
+  );
+}
+
 
 // Parent container for staggered cards
 const container = {
   hidden: {},
   show: {
     transition: {
-      delayChildren: 0.5,
+      delayChildren: 0.7,
       staggerChildren: 0.2,
     },
   },
@@ -43,7 +80,7 @@ const rotateOnHover = (active) =>
         rotate: [-8, 8, -8, 8, 0],
         transition: { duration: 0.8, ease: "easeInOut" },
       }
-    : {};
+    : {rotate: 0};
 
 export default function ContactPage() {
   const [hoveredRow, setHoveredRow] = useState(null);
@@ -101,9 +138,32 @@ export default function ContactPage() {
     }
   };
 
+  // Eyebrow animation
+  const eyebrowVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  };
+
+  // Subtitle animation (after title completes)
+  const subtitleVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", delay: 0.6 } },
+  };
+
   return (
-    <main className="py-20 sm:py-24">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+    <main className="py-20 sm:py-24 relative">
+      {/* Waves SVG Background - Full Width */}
+      <div 
+        className="absolute inset-0 w-full h-full opacity-20 pointer-events-none"
+        style={{
+          backgroundImage: 'url(/images/Waves.svg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      />
+
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 relative z-10">
         <div
           className="relative rounded-3xl ring-1 ring-white/20 p-4 sm:p-6 md:p-8 lg:p-10"
           style={{
@@ -122,33 +182,35 @@ export default function ContactPage() {
             style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.5)" }}
           />
 
-          {/* Title Section with Scale Animation */}
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={headerVariants}
-            className="relative text-center mb-8 sm:mb-10 md:mb-12"
-          >
-            <p
+          {/* Title Section with Word-by-Word Animation */}
+          <div className="relative text-center mb-8 sm:mb-10 md:mb-12">
+            <motion.p
+              initial="hidden"
+              animate="visible"
+              variants={eyebrowVariants}
               className="text-[10px] sm:text-xs md:text-sm font-semibold tracking-[0.18em] uppercase mb-2 sm:mb-3"
               style={{ color: "#000" }}
             >
               CONTACT
-            </p>
-            <h1
+            </motion.p>
+            
+            <AnimatedHeadline
+              text="We're here to help"
               className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 px-4"
-              style={{ color: "#000" }}
-            >
-              We're here to help
-            </h1>
-            <p
+              delay={0.2}
+            />
+            
+            <motion.p
+              initial="hidden"
+              animate="visible"
+              variants={subtitleVariants}
               className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-4"
               style={{ color: "#000" }}
             >
               Have questions or want to schedule a tour? Send us a note or give
               us a call.
-            </p>
-          </motion.div>
+            </motion.p>
+          </div>
 
           {/* Content Grid with Staggered Animation */}
           <motion.div

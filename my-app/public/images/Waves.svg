@@ -1,0 +1,57 @@
+<svg
+  width="100%"
+  height="100%"
+  viewBox="0 0 1920 600"
+  xmlns="http://www.w3.org/2000/svg"
+  preserveAspectRatio="xMidYMid slice"
+>
+  <defs>
+    <!-- Updated sage waves with more vibrant green -->
+    <style>
+      .wave-thick {
+        fill: none;
+        stroke: #9ed593;
+        stroke-opacity: 1;
+        stroke-width: 4;
+      }
+      .wave-thin {
+        fill: none;
+        stroke: #9ed593;
+        stroke-opacity: 1;
+        stroke-width: 2;
+      }
+    </style>
+
+    <!-- Grain pattern -->
+    <pattern
+      id="grainPattern"
+      patternUnits="objectBoundingBox"
+      width="100%"
+      height="100%"
+    >
+      <image
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2NkYGBgAAAABQABDQottAAAAABJRU5ErkJggg=="
+        width="100%"
+        height="100%"
+        preserveAspectRatio="none"
+      />
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="#dfd8d8" />
+
+  <!-- Grain overlay -->
+  <rect width="100%" height="100%" fill="url(#grainPattern)" opacity="0.18" />
+
+  <!-- Waves (alternating thick/thin) -->
+  <g>
+    <path class="wave-thick" d="M 0 60 C 320 -120, 640 240, 960 60 C 1280 -120, 1600 240, 1920 60" />
+    <path class="wave-thin"  d="M 0 140 C 320 -40, 640 320, 960 140 C 1280 -40, 1600 320, 1920 140" />
+    <path class="wave-thick" d="M 0 220 C 320 40, 640 400, 960 220 C 1280 40, 1600 400, 1920 220" />
+    <path class="wave-thin"  d="M 0 300 C 320 120, 640 480, 960 300 C 1280 120, 1600 480, 1920 300" />
+    <path class="wave-thick" d="M 0 380 C 320 200, 640 560, 960 380 C 1280 200, 1600 560, 1920 380" />
+    <path class="wave-thin"  d="M 0 460 C 320 280, 640 640, 960 460 C 1280 280, 1600 640, 1920 460" />
+    <path class="wave-thick" d="M 0 540 C 320 360, 640 720, 960 540 C 1280 360, 1600 720, 1920 540" />
+  </g>
+</svg>
